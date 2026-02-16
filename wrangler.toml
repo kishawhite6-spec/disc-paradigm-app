@@ -7,7 +7,7 @@ compatibility_date = "2024-01-01"
 # paste the resulting id below.
 [[kv_namespaces]]
 binding = "DISC_KV"
-id = "PASTE_YOUR_KV_NAMESPACE_ID_HERE"
+id = "30a2ca0cee6e4d8eb4ab636c6e131158"
 
 # ─── ENVIRONMENT VARIABLES ─────────────────────────────────
 # Set SECRETS via Cloudflare dashboard (Workers > Settings > Variables)
