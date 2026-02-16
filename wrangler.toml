@@ -1,0 +1,26 @@
+name = "disc-paradigm-worker"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+# ─── KV NAMESPACE ──────────────────────────────────────────
+# After running `wrangler kv:namespace create DISC_KV`,
+# paste the resulting id below.
+[[kv_namespaces]]
+binding = "DISC_KV"
+id = "PASTE_YOUR_KV_NAMESPACE_ID_HERE"
+
+# ─── ENVIRONMENT VARIABLES ─────────────────────────────────
+# Set SECRETS via Cloudflare dashboard (Workers > Settings > Variables)
+# NOT in this file. This file is safe to commit to GitHub.
+# Variables to set as secrets in the dashboard:
+#   ADMIN_PASSWORD
+#   RESEND_API_KEY
+#   FROM_EMAIL
+#   ADMIN_EMAIL
+#   JWT_SECRET
+
+# ─── ROUTES ────────────────────────────────────────────────
+# Uncomment and update once your domain is active
+# [[routes]]
+# pattern = "api.discparadigm.net/*"
+# zone_name = "discparadigm.net"
