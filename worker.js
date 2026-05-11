@@ -484,27 +484,27 @@ function buildResultsEmail(data) {
     C: { tip: 'Provide data and details, allow analysis time, be specific, respect their standards' }
   };
 
-  // 30-Day Action Plan
+  // 30-Day Action Plan (Positive Psychology Integration: PERMA, VIA Strengths, Growth Mindset)
   const actionPlan = {
     week1: {
-      title: 'Self-Awareness',
-      military: 'Observe how your ' + STYLE_NAMES[primary] + ' style shows up in daily interactions. Notice when you default to your natural patterns and when you adapt. Journal one example each day.',
-      corporate: 'Track how your ' + STYLE_NAMES[primary] + ' style influences your work approach. Notice your default patterns in meetings, emails, and decisions. Log one observation daily.'
+      title: 'Self-Awareness & Signature Strengths',
+      military: 'Observe how your ' + STYLE_NAMES[primary] + ' style shows up in daily interactions. Each day, identify one VIA Character Strength (like courage, teamwork, or leadership) that supported your performance. Journal how your DISC style and character strengths work together. This builds self-knowledge and meaning (PERMA: Meaning).',
+      corporate: 'Track how your ' + STYLE_NAMES[primary] + ' style influences your work approach. Daily, identify one VIA Character Strength (such as perseverance, creativity, or fairness) that contributed to your success. Log how your behavioral style and strengths align. This deepens self-awareness and purpose (PERMA: Meaning).'
     },
     week2: {
-      title: 'Strengths Application',
-      military: 'Intentionally leverage one ' + STYLE_NAMES[primary] + ' strength each day. At week\'s end, identify which situations benefit most from your natural style.',
-      corporate: 'Deliberately apply one ' + STYLE_NAMES[primary] + ' strength daily. By Friday, determine which contexts maximize your natural abilities.'
+      title: 'Strengths Spotting & Positive Engagement',
+      military: 'Leverage one ' + STYLE_NAMES[primary] + ' strength intentionally each day in mission-critical work. Practice strengths spotting: identify and acknowledge character strengths in three teammates this week. Notice how using your natural abilities creates flow and engagement (PERMA: Engagement). Growth mindset reminder: your abilities develop through practice.',
+      corporate: 'Deliberately apply one ' + STYLE_NAMES[primary] + ' strength daily in meaningful work. Practice strengths spotting: recognize and name character strengths in three colleagues this week. Observe when deploying your strengths creates optimal challenge and absorption (PERMA: Engagement). Growth mindset reminder: skills expand through deliberate practice.'
     },
     week3: {
-      title: 'Style Flex Practice',
-      military: 'Identify someone with a different primary style. Practice adapting your communication with them three times this week. Note what feels uncomfortable and what works.',
-      corporate: 'Choose a colleague with a different dominant style. Adapt your approach in three interactions. Reflect on what challenged you and what succeeded.'
+      title: 'Relationship Building & Style Flex',
+      military: 'Identify someone with a different primary style. Practice adapting your communication with them three times. After each interaction, reflect: What worked? What felt challenging? Share one authentic appreciation with them about their strengths. This builds positive relationships and psychological flexibility (PERMA: Relationships). Growth mindset: discomfort signals learning.',
+      corporate: 'Choose a colleague with a different dominant style. Flex your approach in three interactions. After each, reflect: What succeeded? What challenged you? Offer one genuine recognition of their contributions. This strengthens relationships and adaptive capacity (PERMA: Relationships). Growth mindset: struggle indicates growth, not fixed limits.'
     },
     week4: {
-      title: 'Growth Edge Challenge',
-      military: 'Focus on one growth area from your profile. Take one small action daily to develop this capacity. Share your progress with a trusted peer or mentor.',
-      corporate: 'Target one development area from your profile. Implement one micro-practice daily to build this skill. Discuss your experience with a colleague or coach.'
+      title: 'Growth Challenge & Accomplishment',
+      military: 'Target one development area from your profile. Take one small action daily to build this capacity—this is growth mindset in practice. At week end, reflect on your progress and one positive outcome that resulted. Celebrate the learning, not just the outcome (PERMA: Accomplishment). Share your journey with a trusted peer or mentor to deepen the impact.',
+      corporate: 'Focus on one growth area from your profile. Implement one micro-practice daily to develop this skill—embodying growth mindset. On Friday, review your progress and one positive impact that emerged. Honor the process, not just the result (PERMA: Accomplishment). Discuss your experience with a colleague or coach to reinforce learning.'
     }
   };
 
@@ -617,7 +617,7 @@ function buildResultsEmail(data) {
     <!-- SECTION 6: 30-DAY ACTION PLAN -->
     <div style="margin:2rem 0;">
       <h2 style="font-size:1.5rem;margin-bottom:1rem;border-bottom:2px solid rgba(245,166,35,.3);padding-bottom:.5rem;">📅 30-Day Action Plan</h2>
-      <p style="line-height:1.7;margin-bottom:1.5rem;color:rgba(244,241,236,.8);">This plan helps you apply your DISC insights immediately. Complete one focus area each week.</p>
+      <p style="line-height:1.7;margin-bottom:1rem;color:rgba(244,241,236,.8);">This plan integrates DISC insights with positive psychology research—specifically the PERMA model (Positive emotion, Engagement, Relationships, Meaning, Accomplishment), VIA Character Strengths, and growth mindset principles. Complete one focus area each week.</p>
       
       ${Object.entries(actionPlan).map(([week, content], idx) => `
         <div style="margin:1.5rem 0;padding:1.25rem;background:rgba(255,255,255,.04);border-left:4px solid #F5A623;border-radius:6px;">
@@ -633,14 +633,13 @@ function buildResultsEmail(data) {
 
     <!-- FOOTER -->
     <div style="margin:3rem 0 1rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,.1);text-align:center;">
-      <p style="margin-bottom:1rem;">Access your results anytime at <a href="https://app.discparadigm.net" style="color:#F5A623;text-decoration:none;">app.discparadigm.net</a></p>
       <p style="font-size:.85rem;color:rgba(244,241,236,.5);line-height:1.6;">
         Questions about your profile? Want to schedule coaching?<br/>
-        Contact us at <a href="mailto:contact@discparadigm.net" style="color:#F5A623;text-decoration:none;">contact@discparadigm.net</a> or 
+        Contact us at <a href="mailto:info@kswhiteconsulting.com" style="color:#F5A623;text-decoration:none;">info@kswhiteconsulting.com</a> or 
         <a href="https://meetings-na2.hubspot.com/kswhite" style="color:#F5A623;text-decoration:none;">book a consultation</a>
       </p>
       <p style="font-size:.75rem;color:rgba(244,241,236,.4);margin-top:1.5rem;">
-        Organization: ${data.orgName || 'Individual'} · Track: ${isMilitary ? 'Military' : 'Corporate'} · Completed: ${new Date(data.timestamp).toLocaleDateString()}
+        Organization: ${data.orgName || 'Individual'} · Track: ${isMilitary ? 'Military' : 'Corporate'}
       </p>
     </div>
   `);
