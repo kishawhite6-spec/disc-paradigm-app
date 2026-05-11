@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DISC Paradigm™ - Free Assessment Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: linear-gradient(135deg, #0a1628 0%, #1a2840 100%);
+      color: #e8edf2;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0px, transparent 1px, transparent 40px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0px, transparent 1px, transparent 40px);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .mesh-gradient {
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 20% 50%, rgba(230, 126, 34, 0.08) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 50%, rgba(243, 156, 18, 0.06) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .logo .disc {
+      color: #e67e22;
+    }
+
+    .logo .paradigm {
+      color: #f39c12;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: #94a3b8;
+      font-weight: 400;
+    }
+
+    .preview-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #e67e22, #f39c12);
+      color: #0a1628;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: 0.05em;
+      margin-top: 1rem;
+    }
+
+    .card {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .step-indicator {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .step-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.9rem;
+      color: #94a3b8;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 0.5rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #e67e22, #f39c12);
+      transition: width 0.3s ease;
+      border-radius: 4px;
+    }
+
+    .question-card {
+      margin-bottom: 2rem;
+    }
+
+    .question-number {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.9rem;
+      color: #f39c12;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+
+    .question-text {
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+
+    .track-selector {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .track-option {
+      flex: 1;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    .track-option:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(243, 156, 18, 0.5);
+    }
+
+    .track-option.selected {
+      background: rgba(243, 156, 18, 0.1);
+      border-color: #f39c12;
+    }
+
+    .track-option .icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .track-option .label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 600;
+      font-size: 1.1rem;
+      letter-spacing: 0.05em;
+    }
+
+    .options {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .option {
+      padding: 1.25rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .option:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(243, 156, 18, 0.5);
+    }
+
+    .option.selected {
+      background: rgba(243, 156, 18, 0.1);
+      border-color: #f39c12;
+    }
+
+    .option-number {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #f39c12;
+      min-width: 30px;
+    }
+
+    .option-text {
+      font-size: 1rem;
+      flex: 1;
+    }
+
+    .button {
+      font-family: 'Barlow Condensed', sans-serif;
+      padding: 1rem 2.5rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .button-primary {
+      background: linear-gradient(135deg, #e67e22, #f39c12);
+      color: #0a1628;
+    }
+
+    .button-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(243, 156, 18, 0.3);
+    }
+
+    .button-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #e8edf2;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .button-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .button:disabled:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
+    .results-container {
+      text-align: center;
+    }
+
+    .results-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #e67e22, #f39c12);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .results-subtitle {
+      font-size: 1.1rem;
+      color: #94a3b8;
+      margin-bottom: 2rem;
+    }
+
+    .chart-container {
+      position: relative;
+      max-width: 500px;
+      margin: 0 auto 2rem;
+    }
+
+    .blur-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      backdrop-filter: blur(8px);
+      background: rgba(10, 22, 40, 0.7);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .lock-icon {
+      font-size: 3rem;
+      color: #f39c12;
+    }
+
+    .unlock-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #e8edf2;
+      letter-spacing: 0.05em;
+    }
+
+    .primary-style {
+      margin: 2rem 0;
+      padding: 2rem;
+      background: rgba(243, 156, 18, 0.1);
+      border: 2px solid #f39c12;
+      border-radius: 12px;
+    }
+
+    .primary-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.9rem;
+      color: #f39c12;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .primary-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #e8edf2;
+      margin-bottom: 0.5rem;
+    }
+
+    .primary-description {
+      color: #94a3b8;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .cta-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 500px;
+      margin: 3rem auto 0;
+    }
+
+    .cta-button {
+      width: 100%;
+      justify-content: center;
+      padding: 1.5rem;
+      font-size: 1.2rem;
+    }
+
+    .price {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1rem 0;
+      color: #94a3b8;
+      font-size: 0.9rem;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1.5rem 1rem;
+      }
+
+      .card {
+        padding: 1.5rem;
+      }
+
+      .logo {
+        font-size: 2rem;
+      }
+
+      .question-text {
+        font-size: 1.1rem;
+      }
+
+      .track-selector {
+        flex-direction: column;
+      }
+
+      .cta-button {
+        padding: 1.25rem;
+        font-size: 1.1rem;
+      }
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="mesh-gradient"></div>
+  
+  <div class="container">
+    <div class="header">
+      <div class="logo">
+        <span class="disc">DISC</span> <span class="paradigm">PARADIGM™</span>
+      </div>
+      <div class="subtitle">Strategy. Soul. Straight Talk.</div>
+      <div class="preview-badge">FREE PREVIEW</div>
+    </div>
+
+    <!-- Track Selection Screen -->
+    <div id="trackScreen" class="card">
+      <div class="step-indicator">
+        <div class="step-text">Step 1 of 2</div>
+      </div>
+      <h2 style="text-align: center; margin-bottom: 1rem; font-family: 'Barlow Condensed', sans-serif; font-size: 2rem;">Choose Your Context</h2>
+      <p style="text-align: center; color: #94a3b8; margin-bottom: 2rem;">Select the language that best fits your work environment.</p>
+      
+      <div class="track-selector">
+        <div class="track-option" data-track="military">
+          <div class="icon">⭐</div>
+          <div class="label">Military</div>
+        </div>
+        <div class="track-option" data-track="corporate">
+          <div class="icon">💼</div>
+          <div class="label">Corporate</div>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 2rem;">
+        <button class="button button-primary" id="startBtn" disabled>
+          Continue →
+        </button>
+      </div>
+    </div>
+
+    <!-- Questions Screen -->
+    <div id="questionsScreen" class="card hidden">
+      <div class="step-indicator">
+        <div class="step-text">Step 2 of 2 - Preview Assessment</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressBar"></div>
+        </div>
+      </div>
+
+      <div class="question-card">
+        <div class="question-number" id="questionNumber"></div>
+        <div class="question-text" id="questionText"></div>
+        <div class="options" id="optionsContainer"></div>
+      </div>
+
+      <div style="text-align: center; margin-top: 2rem;">
+        <button class="button button-primary" id="nextBtn" disabled>
+          Next Question →
+        </button>
+      </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="resultsScreen" class="card hidden">
+      <div class="results-container">
+        <div class="results-title">Your Preview Results</div>
+        <div class="results-subtitle">Here's a glimpse of your leadership style</div>
+
+        <div class="chart-container">
+          <canvas id="resultsChart"></canvas>
+          <div class="blur-overlay">
+            <div class="lock-icon">🔒</div>
+            <div class="unlock-text">UNLOCK FULL RESULTS</div>
+          </div>
+        </div>
+
+        <div class="primary-style">
+          <div class="primary-label">Your Primary Style</div>
+          <div class="primary-name" id="primaryStyleName"></div>
+          <div class="primary-description" id="primaryStyleDesc"></div>
+        </div>
+
+        <div class="cta-container">
+          <!-- ⚠️ REMINDER: ADD YOUR STRIPE PAYMENT LINK HERE IN 2 HOURS -->
+          <!-- Create $25 payment link at https://dashboard.stripe.com/payment-links -->
+          <!-- Replace [STRIPE_INDIVIDUAL_LINK] below with your actual Stripe link -->
+          <a href="[STRIPE_INDIVIDUAL_LINK]" class="button button-primary cta-button" target="_blank">
+            🔓 Unlock Full 40-Question Report <span class="price">$25</span>
+          </a>
+          <!-- ⚠️ END REMINDER -->
+          
+          <div class="divider">OR</div>
+          
+          <a href="https://meetings-na2.hubspot.com/kswhite" class="button button-secondary cta-button" target="_blank">
+            📅 Book Free Consultation
+          </a>
+        </div>
+
+        <p style="text-align: center; color: #94a3b8; margin-top: 2rem; font-size: 0.95rem;">
+          Organizations: Get bulk assessments for your team. <a href="mailto:contact@discparadigm.net" style="color: #f39c12; text-decoration: none;">Contact us</a> for pricing.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 10-question preview bank (2-3 from each DISC style)
+    const previewQuestions = [
+      {
+        id: 1,
+        style: 'D',
+        military: "When facing a complex mission, I prefer to make rapid decisions and adapt as I go rather than wait for perfect information.",
+        corporate: "When facing a complex project, I prefer to make quick decisions and adapt as needed rather than wait for perfect information.",
+        type: 'B'
+      },
+      {
+        id: 2,
+        style: 'I',
+        military: "I energize my unit by celebrating wins, recognizing contributions, and building morale through positive interactions.",
+        corporate: "I energize my team by celebrating wins, recognizing contributions, and building morale through positive interactions.",
+        type: 'B'
+      },
+      {
+        id: 3,
+        style: 'S',
+        military: "I remain calm and steady under pressure, helping others adjust to changes without rushing them through transitions.",
+        corporate: "I remain calm and composed under pressure, helping colleagues adjust to changes without rushing them through transitions.",
+        type: 'B'
+      },
+      {
+        id: 4,
+        style: 'C',
+        military: "I focus on accuracy and thoroughness in planning and execution, even when it takes more time.",
+        corporate: "I focus on accuracy and thoroughness in planning and analysis, even when it requires additional time.",
+        type: 'B'
+      },
+      {
+        id: 5,
+        style: 'D',
+        military: "Your commander gives conflicting guidance. Do you challenge it directly or implement it as ordered?",
+        corporate: "Your manager gives conflicting guidance. Do you address it directly or implement it as instructed?",
+        type: 'S'
+      },
+      {
+        id: 6,
+        style: 'I',
+        military: "After a difficult operation, do you rally the team with encouragement or give them space to process individually?",
+        corporate: "After a difficult quarter, do you rally the team with encouragement or give them space to process individually?",
+        type: 'S'
+      },
+      {
+        id: 7,
+        style: 'S',
+        military: "A new soldier struggles with procedures. Do you patiently mentor them or refer them to formal training?",
+        corporate: "A new hire struggles with procedures. Do you patiently mentor them or refer them to formal training?",
+        type: 'S'
+      },
+      {
+        id: 8,
+        style: 'C',
+        military: "You notice a small procedural error that won't affect the mission outcome. Do you correct it anyway?",
+        corporate: "You notice a small procedural error that won't affect the project outcome. Do you correct it anyway?",
+        type: 'S'
+      },
+      {
+        id: 9,
+        style: 'D',
+        military: "When I see an opportunity to improve operations, I take initiative even if it means stepping outside my lane.",
+        corporate: "When I see an opportunity to improve operations, I take initiative even if it means stepping outside my role.",
+        type: 'B'
+      },
+      {
+        id: 10,
+        style: 'I',
+        military: "I build relationships across units and use those connections to accomplish missions more effectively.",
+        corporate: "I build relationships across departments and use those connections to accomplish goals more effectively.",
+        type: 'B'
+      }
+    ];
+
+    const styleProfiles = {
+      D: {
+        name: 'Command',
+        military: 'You are decisive and action-oriented, preferring to take charge and drive results. You thrive in high-pressure environments and aren\'t afraid to challenge the status quo.',
+        corporate: 'You are decisive and results-driven, preferring to take charge and drive outcomes. You thrive in high-pressure environments and aren\'t afraid to challenge conventional approaches.'
+      },
+      I: {
+        name: 'Cohesion',
+        military: 'You energize teams and build strong unit cohesion through positive relationships. You inspire others and create morale that carries through challenging missions.',
+        corporate: 'You energize teams and build strong collaboration through positive relationships. You inspire others and create engagement that drives performance.'
+      },
+      S: {
+        name: 'Stability',
+        military: 'You provide calm and steady leadership, especially during transitions. You are patient, loyal, and help others adapt to change at a sustainable pace.',
+        corporate: 'You provide calm and consistent leadership, especially during change. You are patient, reliable, and help teams adapt to transitions smoothly.'
+      },
+      C: {
+        name: 'Precision',
+        military: 'You prioritize accuracy, thoroughness, and adherence to standards. You analyze situations carefully and ensure quality execution of procedures.',
+        corporate: 'You prioritize accuracy, quality, and systematic approaches. You analyze situations carefully and ensure thorough execution of processes.'
+      }
+    };
+
+    let selectedTrack = '';
+    let currentQuestion = 0;
+    let answers = {};
+
+    // Track selection
+    document.querySelectorAll('.track-option').forEach(option => {
+      option.addEventListener('click', function() {
+        document.querySelectorAll('.track-option').forEach(o => o.classList.remove('selected'));
+        this.classList.add('selected');
+        selectedTrack = this.dataset.track;
+        document.getElementById('startBtn').disabled = false;
+      });
+    });
+
+    document.getElementById('startBtn').addEventListener('click', () => {
+      document.getElementById('trackScreen').classList.add('hidden');
+      document.getElementById('questionsScreen').classList.remove('hidden');
+      displayQuestion();
+    });
+
+    function displayQuestion() {
+      const question = previewQuestions[currentQuestion];
+      const questionText = selectedTrack === 'military' ? question.military : question.corporate;
+      
+      document.getElementById('questionNumber').textContent = `Question ${currentQuestion + 1} of 10`;
+      document.getElementById('questionText').textContent = questionText;
+      
+      const optionsContainer = document.getElementById('optionsContainer');
+      optionsContainer.innerHTML = '';
+      
+      for (let i = 1; i <= 4; i++) {
+        const option = document.createElement('div');
+        option.className = 'option';
+        option.innerHTML = `
+          <div class="option-number">${i}</div>
+          <div class="option-text">${getOptionText(i)}</div>
+        `;
+        option.addEventListener('click', () => selectOption(i));
+        optionsContainer.appendChild(option);
+      }
+      
+      updateProgress();
+      document.getElementById('nextBtn').disabled = !answers[question.id];
+    }
+
+    function getOptionText(value) {
+      const texts = {
+        1: 'Rarely or never describes me',
+        2: 'Sometimes describes me',
+        3: 'Often describes me',
+        4: 'Almost always describes me'
+      };
+      return texts[value];
+    }
+
+    function selectOption(value) {
+      document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+      event.currentTarget.classList.add('selected');
+      
+      const question = previewQuestions[currentQuestion];
+      answers[question.id] = { style: question.style, value: value };
+      document.getElementById('nextBtn').disabled = false;
+    }
+
+    function updateProgress() {
+      const progress = ((currentQuestion + 1) / 10) * 100;
+      document.getElementById('progressBar').style.width = `${progress}%`;
+    }
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      currentQuestion++;
+      if (currentQuestion < 10) {
+        displayQuestion();
+      } else {
+        showResults();
+      }
+    });
+
+    function showResults() {
+      // Calculate scores
+      const scores = { D: 0, I: 0, S: 0, C: 0 };
+      Object.values(answers).forEach(answer => {
+        scores[answer.style] += answer.value;
+      });
+
+      // Find primary style
+      const primary = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+      
+      // Display results
+      document.getElementById('questionsScreen').classList.add('hidden');
+      document.getElementById('resultsScreen').classList.remove('hidden');
+      
+      const profile = styleProfiles[primary];
+      document.getElementById('primaryStyleName').textContent = profile.name;
+      document.getElementById('primaryStyleDesc').textContent = selectedTrack === 'military' ? profile.military : profile.corporate;
+
+      // Create blurred radar chart
+      const ctx = document.getElementById('resultsChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: ['Command', 'Cohesion', 'Stability', 'Precision'],
+          datasets: [{
+            label: 'Your Style',
+            data: [
+              scores.D / 12 * 100,
+              scores.I / 12 * 100,
+              scores.S / 12 * 100,
+              scores.C / 12 * 100
+            ],
+            backgroundColor: 'rgba(243, 156, 18, 0.2)',
+            borderColor: '#f39c12',
+            borderWidth: 3,
+            pointBackgroundColor: '#f39c12',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          scales: {
+            r: {
+              min: 0,
+              max: 100,
+              ticks: {
+                stepSize: 25,
+                color: '#94a3b8',
+                font: { size: 12 }
+              },
+              grid: {
+                color: 'rgba(255, 255, 255, 0.1)'
+              },
+              angleLines: {
+                color: 'rgba(255, 255, 255, 0.1)'
+              },
+              pointLabels: {
+                color: '#e8edf2',
+                font: {
+                  size: 14,
+                  family: "'Barlow Condensed', sans-serif",
+                  weight: '600'
+                }
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              display: false
+            }
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>
