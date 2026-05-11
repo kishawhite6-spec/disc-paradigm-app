@@ -133,25 +133,49 @@ async function handleSendOtp(request, env) {
     html: buildOtpEmail(name, otp),
   });
 
-  return json({ token, message: 'Verification code sent' });
+  return json({ success: true, token, message: 'Verification code sent' });
 }
 
 // ═══════════════════════════════════════════════════════════
 // VERIFY OTP
 // ═══════════════════════════════════════════════════════════
 async function handleVerifyOtp(request, env) {
-  const { token, code } = await request.json();
-  if (!token || !code) return err('Token and code are required');
+  const body = await request.json();
+  const { token, code, email, otp } = body;
+  
+  // Support both old format (email+otp) and new format (token+code)
+  if (!token && !email) return err('Token or email is required');
+  if (!code && !otp) return err('Code is required');
 
-  const stored = await env.DISC_KV.get(`otp:${token}`);
+  // If using email format, find the token
+  let otpToken = token;
+  if (!otpToken && email) {
+    // Search for OTP by email (less efficient but works)
+    const keys = await env.DISC_KV.list({ prefix: 'otp:' });
+    for (const key of keys.keys) {
+      const stored = await env.DISC_KV.get(key.name);
+      if (stored) {
+        const data = JSON.parse(stored);
+        if (data.email === email) {
+          otpToken = key.name.replace('otp:', '');
+          break;
+        }
+      }
+    }
+    if (!otpToken) return json({ valid: false, message: 'Code expired or not found. Please request a new code.' });
+  }
+
+  const stored = await env.DISC_KV.get(`otp:${otpToken}`);
   if (!stored) return json({ valid: false, message: 'Code expired or not found. Please request a new code.' });
 
-  const { otp, expires } = JSON.parse(stored);
+  const { otp: storedOtp, expires } = JSON.parse(stored);
   if (Date.now() > expires) return json({ valid: false, message: 'Code has expired. Please request a new one.' });
-  if (otp !== code) return json({ valid: false, message: 'Incorrect code. Please try again.' });
+  
+  const submittedCode = code || otp;
+  if (storedOtp !== submittedCode) return json({ valid: false, message: 'Incorrect code. Please try again.' });
 
   // Delete used OTP
-  await env.DISC_KV.delete(`otp:${token}`);
+  await env.DISC_KV.delete(`otp:${otpToken}`);
   return json({ valid: true });
 }
 
