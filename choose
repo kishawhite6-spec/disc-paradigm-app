@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DISC Paradigm™ Assessment Options</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: linear-gradient(135deg, #0a1628 0%, #1a2840 100%);
+      color: #e8edf2;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0px, transparent 1px, transparent 40px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0px, transparent 1px, transparent 40px);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .mesh-gradient {
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 20% 50%, rgba(230, 126, 34, 0.08) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 50%, rgba(243, 156, 18, 0.06) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 3rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .logo .disc {
+      color: #e67e22;
+    }
+
+    .logo .paradigm {
+      color: #f39c12;
+    }
+
+    .tagline {
+      font-size: 1.1rem;
+      color: #94a3b8;
+      font-weight: 400;
+      margin-bottom: 2rem;
+    }
+
+    .intro {
+      font-size: 1.25rem;
+      color: #e8edf2;
+      line-height: 1.6;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .option-card {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 2.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .option-card:hover {
+      border-color: rgba(243, 156, 18, 0.5);
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(243, 156, 18, 0.2);
+    }
+
+    .option-card.featured {
+      border-color: #f39c12;
+      background: rgba(243, 156, 18, 0.05);
+      position: relative;
+    }
+
+    .badge {
+      position: absolute;
+      top: -12px;
+      right: 20px;
+      background: linear-gradient(135deg, #e67e22, #f39c12);
+      color: #0a1628;
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .option-icon {
+      font-size: 3.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .option-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #e8edf2;
+    }
+
+    .option-price {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #f39c12;
+      margin-bottom: 0.5rem;
+    }
+
+    .option-price .small {
+      font-size: 1.2rem;
+      color: #94a3b8;
+    }
+
+    .option-description {
+      color: #94a3b8;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+      flex-grow: 1;
+    }
+
+    .option-features {
+      list-style: none;
+      margin-bottom: 2rem;
+      text-align: left;
+    }
+
+    .option-features li {
+      padding: 0.5rem 0;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .option-features li::before {
+      content: '✓';
+      color: #f39c12;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .button {
+      font-family: 'Barlow Condensed', sans-serif;
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      text-decoration: none;
+      display: inline-block;
+      width: 100%;
+      text-align: center;
+    }
+
+    .button-primary {
+      background: linear-gradient(135deg, #e67e22, #f39c12);
+      color: #0a1628;
+    }
+
+    .button-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(243, 156, 18, 0.4);
+    }
+
+    .button-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #e8edf2;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .button-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: #f39c12;
+    }
+
+    .org-info {
+      margin-top: 4rem;
+      text-align: center;
+      padding: 2rem;
+      background: rgba(15, 23, 42, 0.4);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .org-info h3 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #e8edf2;
+    }
+
+    .org-info p {
+      color: #94a3b8;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .org-info a {
+      color: #f39c12;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .org-info a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 2rem 1rem;
+      }
+
+      .logo {
+        font-size: 2.25rem;
+      }
+
+      .intro {
+        font-size: 1.1rem;
+      }
+
+      .options-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .option-card {
+        padding: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="mesh-gradient"></div>
+  
+  <div class="container">
+    <div class="header">
+      <div class="logo">
+        <span class="disc">DISC</span> <span class="paradigm">PARADIGM™</span>
+      </div>
+      <div class="tagline">Strategy. Soul. Straight Talk.</div>
+      <p class="intro">
+        Choose how you'd like to experience the DISC Paradigm™ assessment — start with a free preview, purchase the full report, or enter your organization's access code.
+      </p>
+    </div>
+
+    <div class="options-grid">
+      <!-- Option 1: Free Preview -->
+      <div class="option-card">
+        <div>
+          <div class="option-icon">🔍</div>
+          <h2 class="option-title">Free Preview</h2>
+          <div class="option-price">
+            FREE
+          </div>
+          <p class="option-description">
+            Take a quick 10-question preview to get a glimpse of your primary behavioral style.
+          </p>
+          <ul class="option-features">
+            <li>10 assessment questions</li>
+            <li>Primary style revealed</li>
+            <li>Basic profile overview</li>
+            <li>No payment required</li>
+          </ul>
+        </div>
+        <a href="preview.html" class="button button-secondary">Start Free Preview →</a>
+      </div>
+
+      <!-- Option 2: Purchase Full Assessment -->
+      <div class="option-card featured">
+        <div class="badge">Most Popular</div>
+        <div>
+          <div class="option-icon">🎯</div>
+          <h2 class="option-title">Full Assessment</h2>
+          <div class="option-price">
+            $25 <span class="small">one-time</span>
+          </div>
+          <p class="option-description">
+            Get your complete DISC profile with detailed insights, communication strategies, and action plan.
+          </p>
+          <ul class="option-features">
+            <li>40 comprehensive questions</li>
+            <li>Full 4-style breakdown</li>
+            <li>Detailed email report</li>
+            <li>Communication tips</li>
+            <li>Stress response insights</li>
+            <li>30-Day Action Plan</li>
+          </ul>
+        </div>
+        <a href="[https://buy.stripe.com/4gM3cub6b5VO2K691SfQI01]" class="button button-primary">Purchase Now ($25) →</a>
+      </div>
+
+      <!-- Option 3: Enter Access Code -->
+      <div class="option-card">
+        <div>
+          <div class="option-icon">🔑</div>
+          <h2 class="option-title">I Have a Code</h2>
+          <div class="option-price">
+            ACCESS CODE
+          </div>
+          <p class="option-description">
+            Your organization provided you with a unique access code. Enter it to begin your full assessment.
+          </p>
+          <ul class="option-features">
+            <li>40 comprehensive questions</li>
+            <li>Full DISC profile results</li>
+            <li>Detailed email report</li>
+            <li>Provided by your organization</li>
+          </ul>
+        </div>
+        <a href="assessment.html" class="button button-secondary">Enter Code →</a>
+      </div>
+    </div>
+
+    <div class="org-info">
+      <h3>Organizations & Teams</h3>
+      <p>
+        Need assessments for your entire team? We offer bulk pricing and consulting packages tailored to your organization's needs.
+      </p>
+      <p>
+        <strong>20 Assessments:</strong> $400 ($20 each) • 
+        <a href="https://meetings-na2.hubspot.com/kswhite" target="_blank">Schedule Consultation</a> • 
+        <a href="mailto:info@kswhiteconsulting.com">Email Us</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>
