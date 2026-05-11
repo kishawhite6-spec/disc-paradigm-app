@@ -7,7 +7,7 @@
  *   - Environment Variables (set in Cloudflare dashboard):
  *       ADMIN_PASSWORD     = your chosen admin password
  *       RESEND_API_KEY     = from resend.com (free tier)
- *       FROM_EMAIL         = noreply@discparadigm.net
+ *       FROM_EMAIL         = info@kswhiteconsulting.com
  *       ADMIN_EMAIL        = your email for result notifications
  *       JWT_SECRET         = any long random string (32+ chars)
  */
