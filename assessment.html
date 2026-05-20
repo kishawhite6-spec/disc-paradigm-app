@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DISC Paradigm™ Assessment</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: linear-gradient(135deg, #0a1628 0%, #1a2840 100%);
+      color: #e8edf2;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0px, transparent 1px, transparent 40px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0px, transparent 1px, transparent 40px);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .mesh-gradient {
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 20% 50%, rgba(230, 126, 34, 0.08) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 50%, rgba(243, 156, 18, 0.06) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .logo .disc {
+      color: #e67e22;
+    }
+
+    .logo .paradigm {
+      color: #f39c12;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: #94a3b8;
+      font-weight: 400;
+    }
+
+    .card {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .card h2 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .card p {
+      text-align: center;
+      color: #94a3b8;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.9rem;
+      color: #f39c12;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: #e8edf2;
+      font-size: 1rem;
+      font-family: 'Barlow', sans-serif;
+      transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #f39c12;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .button {
+      font-family: 'Barlow Condensed', sans-serif;
+      padding: 1rem 2.5rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .button-primary {
+      background: linear-gradient(135deg, #e67e22, #f39c12);
+      color: #0a1628;
+    }
+
+    .button-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(243, 156, 18, 0.3);
+    }
+
+    .button-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #e8edf2;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .button:disabled:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
+    .track-selector {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .track-option {
+      flex: 1;
+      padding: 1.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    .track-option:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(243, 156, 18, 0.5);
+    }
+
+    .track-option.selected {
+      background: rgba(243, 156, 18, 0.1);
+      border-color: #f39c12;
+    }
+
+    .track-option .icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .track-option .label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 600;
+      font-size: 1.2rem;
+      letter-spacing: 0.05em;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #e67e22, #f39c12);
+      transition: width 0.3s ease;
+      border-radius: 4px;
+    }
+
+    .question-card {
+      margin-bottom: 2rem;
+    }
+
+    .question-number {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.9rem;
+      color: #f39c12;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+
+    .question-text {
+      font-size: 1.2rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+
+    .options {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .option {
+      padding: 1.25rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .option:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(243, 156, 18, 0.5);
+    }
+
+    .option.selected {
+      background: rgba(243, 156, 18, 0.1);
+      border-color: #f39c12;
+    }
+
+    .option-number {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #f39c12;
+      min-width: 30px;
+    }
+
+    .option-text {
+      font-size: 1rem;
+      flex: 1;
+    }
+
+    .results-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-align: center;
+      background: linear-gradient(135deg, #e67e22, #f39c12);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .chart-container {
+      max-width: 500px;
+      margin: 0 auto 2rem;
+    }
+
+    .style-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .style-card {
+      padding: 1.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+    }
+
+    .style-card.primary {
+      grid-column: 1 / -1;
+      border-color: #f39c12;
+      background: rgba(243, 156, 18, 0.1);
+    }
+
+    .style-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.85rem;
+      color: #f39c12;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .style-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .style-score {
+      font-size: 1rem;
+      color: #94a3b8;
+      margin-bottom: 1rem;
+    }
+
+    .style-description {
+      color: #94a3b8;
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    .scores-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .score-item {
+      text-align: center;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+    }
+
+    .score-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.9rem;
+      color: #94a3b8;
+      margin-bottom: 0.5rem;
+    }
+
+    .score-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #f39c12;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .error-message {
+      background: rgba(231, 76, 60, 0.1);
+      border: 2px solid #e74c3c;
+      color: #e74c3c;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .success-message {
+      background: rgba(46, 204, 113, 0.1);
+      border: 2px solid #2ecc71;
+      color: #2ecc71;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .otp-input {
+      text-align: center;
+      font-size: 1.5rem;
+      letter-spacing: 0.5em;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1.5rem 1rem;
+      }
+
+      .card {
+        padding: 1.5rem;
+      }
+
+      .logo {
+        font-size: 2rem;
+      }
+
+      .style-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .scores-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .track-selector {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="mesh-gradient"></div>
+  
+  <div class="container">
+    <div class="header">
+      <div class="logo">
+        <span class="disc">DISC</span> <span class="paradigm">PARADIGM™</span>
+      </div>
+      <div class="subtitle">Strategy. Soul. Straight Talk.</div>
+    </div>
+
+    <!-- Screen 1: Access Code -->
+    <div id="codeScreen" class="card">
+      <h2>Enter Your Access Code</h2>
+      <p>Your organization administrator provided you with a unique access code. Enter it below to begin the assessment.</p>
+      
+      <div id="codeError" class="error-message hidden"></div>
+      
+      <div class="form-group">
+        <label class="form-label">Access Code</label>
+        <input type="text" class="form-input" id="accessCode" placeholder="Enter 8-character code" maxlength="8" style="text-transform: uppercase;">
+      </div>
+
+      <button class="button button-primary" id="validateCodeBtn">Continue →</button>
+    </div>
+
+    <!-- Screen 2: Profile Info -->
+    <div id="profileScreen" class="card hidden">
+      <h2>Your Information</h2>
+      <p>This information helps us provide you with personalized insights.</p>
+      
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input type="text" class="form-input" id="fullName" placeholder="John Doe">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input type="email" class="form-input" id="email" placeholder="you@example.com">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Organization / Unit</label>
+        <input type="text" class="form-input" id="organization" placeholder="Your organization or unit name">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Role / Rank</label>
+        <input type="text" class="form-input" id="role" placeholder="Your role or rank">
+      </div>
+
+      <button class="button button-primary" id="profileNextBtn">Continue →</button>
+    </div>
+
+    <!-- Screen 3: Email Verification -->
+    <div id="verifyScreen" class="card hidden">
+      <h2>Verify Your Email</h2>
+      <p>We've sent a 6-digit code to <strong id="emailDisplay"></strong>. Enter it below to continue.</p>
+      
+      <div id="verifyError" class="error-message hidden"></div>
+      <div id="verifySuccess" class="success-message hidden"></div>
+      
+      <div class="form-group">
+        <label class="form-label">Verification Code</label>
+        <input type="text" class="form-input otp-input" id="otpCode" placeholder="000000" maxlength="6">
+      </div>
+
+      <button class="button button-primary" id="verifyOtpBtn">Verify →</button>
+      <button class="button button-secondary" id="resendOtpBtn" style="margin-top: 1rem;">Resend Code</button>
+    </div>
+
+    <!-- Screen 4: Track Selection -->
+    <div id="trackScreen" class="card hidden">
+      <h2>Choose Your Context</h2>
+      <p>Select the language that best fits your work environment.</p>
+      
+      <div class="track-selector">
+        <div class="track-option" data-track="military">
+          <div class="icon">⭐</div>
+          <div class="label">Military</div>
+        </div>
+        <div class="track-option" data-track="corporate">
+          <div class="icon">💼</div>
+          <div class="label">Corporate</div>
+        </div>
+      </div>
+
+      <button class="button button-primary" id="trackNextBtn" disabled>Continue →</button>
+    </div>
+
+    <!-- Screen 5: Assessment Questions -->
+    <div id="questionsScreen" class="card hidden">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressBar"></div>
+      </div>
+
+      <div class="question-card">
+        <div class="question-number" id="questionNumber"></div>
+        <div class="question-text" id="questionText"></div>
+        <div class="options" id="optionsContainer"></div>
+      </div>
+
+      <button class="button button-primary" id="nextQuestionBtn" disabled>Next Question →</button>
+    </div>
+
+    <!-- Screen 6: Results -->
+    <div id="resultsScreen" class="card hidden">
+      <h2 class="results-title">Your DISC Profile Results</h2>
+      
+      <div class="chart-container">
+        <canvas id="resultsChart"></canvas>
+      </div>
+
+      <div class="scores-grid">
+        <div class="score-item">
+          <div class="score-label">Command</div>
+          <div class="score-value" id="scoreD">0%</div>
+        </div>
+        <div class="score-item">
+          <div class="score-label">Cohesion</div>
+          <div class="score-value" id="scoreI">0%</div>
+        </div>
+        <div class="score-item">
+          <div class="score-label">Stability</div>
+          <div class="score-value" id="scoreS">0%</div>
+        </div>
+        <div class="score-item">
+          <div class="score-label">Precision</div>
+          <div class="score-value" id="scoreC">0%</div>
+        </div>
+      </div>
+
+      <div class="style-cards">
+        <div class="style-card primary" id="primaryCard">
+          <div class="style-label">Your Primary Style</div>
+          <div class="style-name" id="primaryName"></div>
+          <div class="style-score" id="primaryScore"></div>
+          <div class="style-description" id="primaryDesc"></div>
+        </div>
+
+        <div class="style-card" id="secondaryCard">
+          <div class="style-label">Secondary Style</div>
+          <div class="style-name" id="secondaryName"></div>
+          <div class="style-score" id="secondaryScore"></div>
+        </div>
+      </div>
+
+      <div id="emailSuccess" class="success-message hidden">
+        ✓ Detailed report has been sent to your email!
+      </div>
+
+      <button class="button button-primary" id="emailReportBtn">📧 Email Me Detailed Report</button>
+      <button class="button button-secondary" id="printBtn" style="margin-top: 1rem;">🖨️ Print Results</button>
+    </div>
+  </div>
+
+  <script>
+    const WORKER_URL = 'https://disc-paradigm-worker.kishawhite6.workers.dev';
+
+    // 40-question bank
+    const questions = [
+      { id: 1, style: 'D', military: "When facing a complex mission, I prefer to make rapid decisions and adapt as I go rather than wait for perfect information.", corporate: "When facing a complex project, I prefer to make quick decisions and adapt as needed rather than wait for perfect information." },
+      { id: 2, style: 'I', military: "I energize my unit by celebrating wins, recognizing contributions, and building morale through positive interactions, often doing so spontaneously rather than waiting for a formal moment.", corporate: "I energize my team by celebrating wins, recognizing contributions, and building morale through positive interactions, often doing so spontaneously rather than waiting for a formal moment." },
+      { id: 3, style: 'S', military: "I remain calm and steady under pressure, helping others adjust to changes without rushing them through transitions.", corporate: "I remain calm and composed under pressure, helping colleagues adjust to changes without rushing them through transitions." },
+      { id: 4, style: 'C', military: "I will slow down mission planning or execution to get it right, even when there is pressure from others to move faster.", corporate: "I will slow a project down to get it right, even when there is pressure from others to move faster." },
+      { id: 5, style: 'D', military: "When I receive guidance I believe is flawed, I raise my concern through the appropriate channel rather than implementing it without question.", corporate: "When I receive direction I believe is flawed, I raise my concern directly rather than implementing it without question." },
+      { id: 6, style: 'I', military: "After a difficult mission, I naturally step in to rebuild team morale through encouragement and positive energy.", corporate: "After a difficult stretch, I naturally step in to rebuild team energy through encouragement and visible optimism." },
+      { id: 7, style: 'S', military: "When a teammate is struggling with a task, I stay patient and work alongside them until they have what they need to succeed.", corporate: "When a new teammate is struggling, I stay patient and work alongside them until they have what they need to succeed." },
+      { id: 8, style: 'C', military: "I correct procedural errors even when they are minor, because maintaining standards matters regardless of immediate mission impact.", corporate: "I correct procedural errors even when they are minor, because standards matter independent of immediate impact." },
+      { id: 9, style: 'D', military: "When I see a problem that needs solving, I act on it even if no one has asked me to and even if it means operating outside my designated lane.", corporate: "When I see a problem that needs solving, I act on it even if no one has asked me to and even if it is not my department's responsibility." },
+      { id: 10, style: 'I', military: "I build relationships across units and use those connections to accomplish missions more effectively.", corporate: "I build relationships across departments and use those connections to accomplish goals more effectively." },
+      { id: 11, style: 'S', military: "I prefer a consistent work environment where I can build trust with teammates over time and contribute reliably to shared goals.", corporate: "I prefer a consistent work environment where I can build trust with colleagues over time and contribute reliably to shared goals." },
+      { id: 12, style: 'C', military: "I review and verify data multiple times before making recommendations, even under time pressure.", corporate: "I review and verify information multiple times before presenting recommendations, even under deadlines." },
+      { id: 13, style: 'D', military: "I am comfortable making tough calls that may be unpopular if I believe they are the right course of action.", corporate: "I am comfortable making difficult decisions that may be unpopular if I believe they are the right course of action." },
+      { id: 14, style: 'I', military: "I use storytelling and personal anecdotes to motivate others and make complex ideas more relatable.", corporate: "I use storytelling and examples to engage others and make complex concepts more accessible." },
+      { id: 15, style: 'S', military: "I am known for being a steady presence that others can depend on during uncertain times.", corporate: "I am the person teammates come to when things feel unstable, because they know I will stay calm and keep showing up." },
+      { id: 16, style: 'C', military: "I prefer written orders and documented procedures over verbal instructions.", corporate: "I prefer written communication and documented processes over verbal instructions." },
+      { id: 17, style: 'D', military: "I prefer to adapt on the fly rather than pause to ensure every step follows the standard process.", corporate: "I tend to start moving before I have all the information I need, because taking action reveals more than waiting does." },
+      { id: 18, style: 'I', military: "I bring visible energy and enthusiasm to group efforts, and my motivation increases the more people are involved.", corporate: "I bring visible energy and enthusiasm to group work, and my motivation increases as more people get involved." },
+      { id: 19, style: 'S', military: "I can sustain consistent effort on tasks that others find repetitive, as long as I understand why the work contributes to mission success.", corporate: "I can sustain consistent effort on tasks that others find tedious, as long as I understand why the work matters." },
+      { id: 20, style: 'C', military: "I ask detailed questions to fully understand requirements before beginning work.", corporate: "I ask detailed questions to fully understand requirements before starting projects." },
+      { id: 21, style: 'D', military: "When my unit is divided on a course of action, I would rather make a call and move forward than wait for full consensus.", corporate: "When the group is divided on direction, I would rather make a call and move forward than wait for everyone to agree." },
+      { id: 22, style: 'I', military: "I enjoy public recognition and sharing success stories with the broader organization.", corporate: "I appreciate public recognition and enjoy sharing success stories with the team." },
+      { id: 23, style: 'S', military: "When a process is working, I advocate for keeping it in place rather than changing it without a clear operational reason.", corporate: "When a process is working, I advocate for keeping it rather than changing it without a clear reason." },
+      { id: 24, style: 'C', military: "I become uncomfortable when forced to act without sufficient data or clear standards.", corporate: "I feel uncomfortable when required to proceed without adequate data or clear guidelines." },
+      { id: 25, style: 'D', military: "I push back when I believe direction is flawed, even if it comes from senior leadership.", corporate: "I push back when I believe strategy is flawed, even if it comes from senior leadership." },
+      { id: 26, style: 'I', military: "I am often the person who notices when unit morale is low and does something about it, even when that is not my assigned role.", corporate: "I am often the person who notices when team energy is low and does something about it, even when that is not part of my job." },
+      { id: 27, style: 'S', military: "I work best when I have time to fully process information before being asked to respond.", corporate: "I work best when I have time to fully consider information before being asked for input." },
+      { id: 28, style: 'C', military: "I am more focused on the quality and accuracy of my own work than on how quickly I complete it.", corporate: "I am more focused on the quality and accuracy of my own work than on how quickly I complete it." },
+      { id: 29, style: 'D', military: "In high-pressure situations, I feel most effective when I can take charge of the decision and move the mission forward quickly.", corporate: "In high-pressure situations, I feel most effective when I can take charge of the decision and move forward quickly." },
+      { id: 30, style: 'I', military: "I actively invest time in getting to know the people I work with, because strong relationships improve everything from communication to mission outcomes.", corporate: "I actively invest time in getting to know the people I work with, because relationships improve everything from communication to results." },
+      { id: 31, style: 'S', military: "When tensions arise in my unit, I look for ways to reduce friction before the situation escalates.", corporate: "When tensions arise on my team, I look for ways to reduce friction before the situation escalates." },
+      { id: 32, style: 'C', military: "I do my best work when the mission requirements are clearly defined and I have the space to execute without constant interruption.", corporate: "I do my best work when expectations are clearly defined and I have the space to execute without constant interruption." },
+      { id: 33, style: 'D', military: "I would rather launch and adjust than spend time developing a detailed plan before moving.", corporate: "I would rather launch and adjust than spend time developing a detailed plan before moving." },
+      { id: 34, style: 'I', military: "I am comfortable being the center of attention and often volunteer to brief leadership.", corporate: "I am comfortable being the center of attention and often volunteer to present to leadership." },
+      { id: 35, style: 'S', military: "My commitment to my unit does not waver when things get difficult, and I tend to put the group's stability ahead of my own preferences.", corporate: "I stay loyal to my team even when it costs me personally, whether that is time, recognition, or an easier path." },
+      { id: 36, style: 'C', military: "I meticulously document processes and decisions for future reference.", corporate: "I carefully document processes and decisions to ensure consistency and accountability." },
+      { id: 37, style: 'D', military: "I prefer to adapt on the fly and achieve the mission objective rather than ensuring every procedural step is followed exactly.", corporate: "I prioritize getting to the right outcome over making sure every procedural box is checked along the way." },
+      { id: 38, style: 'I', military: "I use humor and positive energy to diffuse tension in stressful situations.", corporate: "I use humor and positivity to ease tension during stressful situations." },
+      { id: 39, style: 'S', military: "I provide support and encouragement to teammates who are struggling without judgment, focusing on what they need to move forward.", corporate: "When a colleague is struggling, I focus entirely on what they need to move forward rather than on evaluating what went wrong." },
+      { id: 40, style: 'C', military: "I analyze potential risks thoroughly before committing to a course of action.", corporate: "I analyze potential risks carefully before committing to a strategy." }
+    ];
+
+    const styleProfiles = {
+      D: {
+        name: 'Command',
+        military: 'You are decisive and action-oriented, preferring to take charge and drive results. You thrive in high-pressure environments and aren\'t afraid to challenge the status quo to accomplish the mission.',
+        corporate: 'You are decisive and results-driven, preferring to take charge and drive outcomes. You thrive in high-pressure environments and aren\'t afraid to challenge conventional approaches to achieve goals.'
+      },
+      I: {
+        name: 'Cohesion',
+        military: 'You energize teams and build strong unit cohesion through positive relationships. You inspire others and create morale that carries through challenging missions. You are the glue that holds teams together.',
+        corporate: 'You energize teams and build strong collaboration through positive relationships. You inspire others and create engagement that drives performance. You are the connector who brings people together.'
+      },
+      S: {
+        name: 'Stability',
+        military: 'You provide calm and steady leadership, especially during transitions. You are patient, loyal, and help others adapt to change at a sustainable pace. You are the anchor that keeps teams grounded.',
+        corporate: 'You provide calm and consistent leadership, especially during change. You are patient, reliable, and help teams adapt to transitions smoothly. You are the steady hand that maintains stability.'
+      },
+      C: {
+        name: 'Precision',
+        military: 'You prioritize accuracy, thoroughness, and adherence to standards. You analyze situations carefully and ensure quality execution of procedures. You are the guardian of quality and compliance.',
+        corporate: 'You prioritize accuracy, quality, and systematic approaches. You analyze situations carefully and ensure thorough execution of processes. You are the champion of excellence and precision.'
+      }
+    };
+
+    let userData = {};
+    let selectedTrack = '';
+    let currentQuestion = 0;
+    let answers = {};
+
+    // Screen 1: Access Code Validation
+    document.getElementById('validateCodeBtn').addEventListener('click', async () => {
+      const code = document.getElementById('accessCode').value.trim().toUpperCase();
+      const errorDiv = document.getElementById('codeError');
+      
+      if (!code || code.length !== 8) {
+        errorDiv.textContent = 'Please enter a valid 8-character access code.';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${WORKER_URL}/validate-code`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code })
+        });
+
+        const data = await response.json();
+
+        if (data.valid) {
+          userData.accessCode = code;
+          userData.orgId = data.orgId;
+          userData.orgName = data.orgName;
+          document.getElementById('codeScreen').classList.add('hidden');
+          document.getElementById('profileScreen').classList.remove('hidden');
+        } else {
+          errorDiv.textContent = data.message || 'Invalid access code. Please check with your administrator.';
+          errorDiv.classList.remove('hidden');
+        }
+      } catch (error) {
+        errorDiv.textContent = 'Unable to validate code. Please try again.';
+        errorDiv.classList.remove('hidden');
+      }
+    });
+
+    // Screen 2: Profile Info
+    document.getElementById('profileNextBtn').addEventListener('click', async () => {
+      const name = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const organization = document.getElementById('organization').value.trim();
+      const role = document.getElementById('role').value.trim();
+
+      if (!name || !email || !organization || !role) {
+        alert('Please fill in all fields.');
+        return;
+      }
+
+      userData.name = name;
+      userData.email = email;
+      userData.organization = organization;
+      userData.role = role;
+
+      // Send OTP
+      try {
+        const response = await fetch(`${WORKER_URL}/send-otp`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, name })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          document.getElementById('emailDisplay').textContent = email;
+          document.getElementById('profileScreen').classList.add('hidden');
+          document.getElementById('verifyScreen').classList.remove('hidden');
+        } else {
+          alert('Failed to send verification code. Please try again.');
+        }
+      } catch (error) {
+        alert('Unable to send verification code. Please try again.');
+      }
+    });
+
+    // Screen 3: Email Verification
+    document.getElementById('verifyOtpBtn').addEventListener('click', async () => {
+      const otp = document.getElementById('otpCode').value.trim();
+      const errorDiv = document.getElementById('verifyError');
+      const successDiv = document.getElementById('verifySuccess');
+
+      if (otp.length !== 6) {
+        errorDiv.textContent = 'Please enter the 6-digit code.';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${WORKER_URL}/verify-otp`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: userData.email, otp })
+        });
+
+        const data = await response.json();
+
+        if (data.valid) {
+          successDiv.textContent = '✓ Email verified successfully!';
+          successDiv.classList.remove('hidden');
+          errorDiv.classList.add('hidden');
+
+          setTimeout(() => {
+            document.getElementById('verifyScreen').classList.add('hidden');
+            document.getElementById('trackScreen').classList.remove('hidden');
+          }, 1000);
+        } else {
+          errorDiv.textContent = 'Invalid code. Please try again.';
+          errorDiv.classList.remove('hidden');
+          successDiv.classList.add('hidden');
+        }
+      } catch (error) {
+        errorDiv.textContent = 'Unable to verify code. Please try again.';
+        errorDiv.classList.remove('hidden');
+      }
+    });
+
+    document.getElementById('resendOtpBtn').addEventListener('click', async () => {
+      try {
+        await fetch(`${WORKER_URL}/send-otp`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: userData.email, name: userData.name })
+        });
+        alert('New code sent to your email!');
+      } catch (error) {
+        alert('Failed to resend code. Please try again.');
+      }
+    });
+
+    // Screen 4: Track Selection
+    document.querySelectorAll('.track-option').forEach(option => {
+      option.addEventListener('click', function() {
+        document.querySelectorAll('.track-option').forEach(o => o.classList.remove('selected'));
+        this.classList.add('selected');
+        selectedTrack = this.dataset.track;
+        document.getElementById('trackNextBtn').disabled = false;
+      });
+    });
+
+    document.getElementById('trackNextBtn').addEventListener('click', () => {
+      userData.track = selectedTrack;
+      document.getElementById('trackScreen').classList.add('hidden');
+      document.getElementById('questionsScreen').classList.remove('hidden');
+      displayQuestion();
+    });
+
+    // Screen 5: Questions
+    function displayQuestion() {
+      const question = questions[currentQuestion];
+      const questionText = selectedTrack === 'military' ? question.military : question.corporate;
+      
+      document.getElementById('questionNumber').textContent = `Question ${currentQuestion + 1} of 40`;
+      document.getElementById('questionText').textContent = questionText;
+      
+      const optionsContainer = document.getElementById('optionsContainer');
+      optionsContainer.innerHTML = '';
+      
+      const optionTexts = [
+        'Rarely or never describes me',
+        'Sometimes describes me',
+        'Often describes me',
+        'Almost always describes me'
+      ];
+
+      for (let i = 1; i <= 4; i++) {
+        const option = document.createElement('div');
+        option.className = 'option';
+        option.innerHTML = `
+          <div class="option-number">${i}</div>
+          <div class="option-text">${optionTexts[i-1]}</div>
+        `;
+        option.addEventListener('click', () => selectOption(i, option));
+        optionsContainer.appendChild(option);
+      }
+      
+      updateProgress();
+      document.getElementById('nextQuestionBtn').disabled = !answers[question.id];
+    }
+
+    function selectOption(value, element) {
+      document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+      element.classList.add('selected');
+      
+      const question = questions[currentQuestion];
+      answers[question.id] = { style: question.style, value: value };
+      document.getElementById('nextQuestionBtn').disabled = false;
+    }
+
+    function updateProgress() {
+      const progress = ((currentQuestion + 1) / 40) * 100;
+      document.getElementById('progressBar').style.width = `${progress}%`;
+    }
+
+    document.getElementById('nextQuestionBtn').addEventListener('click', () => {
+      currentQuestion++;
+      if (currentQuestion < 40) {
+        displayQuestion();
+      } else {
+        calculateAndShowResults();
+      }
+    });
+
+    // Screen 6: Results
+    async function calculateAndShowResults() {
+      const scores = { D: 0, I: 0, S: 0, C: 0 };
+      
+      Object.values(answers).forEach(answer => {
+        scores[answer.style] += answer.value;
+      });
+
+      const percentages = {
+        D: Math.round((scores.D / 40) * 100),
+        I: Math.round((scores.I / 40) * 100),
+        S: Math.round((scores.S / 40) * 100),
+        C: Math.round((scores.C / 40) * 100)
+      };
+
+      const sorted = Object.entries(percentages).sort((a, b) => b[1] - a[1]);
+      const primary = sorted[0][0];
+      const secondary = sorted[1][0];
+
+      userData.scores = scores;
+      userData.percentages = percentages;
+      userData.primary = primary;
+      userData.secondary = secondary;
+
+      // Display results
+      document.getElementById('questionsScreen').classList.add('hidden');
+      document.getElementById('resultsScreen').classList.remove('hidden');
+
+      document.getElementById('scoreD').textContent = `${percentages.D}%`;
+      document.getElementById('scoreI').textContent = `${percentages.I}%`;
+      document.getElementById('scoreS').textContent = `${percentages.S}%`;
+      document.getElementById('scoreC').textContent = `${percentages.C}%`;
+
+      const primaryProfile = styleProfiles[primary];
+      const secondaryProfile = styleProfiles[secondary];
+
+      document.getElementById('primaryName').textContent = primaryProfile.name;
+      document.getElementById('primaryScore').textContent = `${percentages[primary]}% - Your Dominant Style`;
+      document.getElementById('primaryDesc').textContent = selectedTrack === 'military' ? primaryProfile.military : primaryProfile.corporate;
+
+      document.getElementById('secondaryName').textContent = secondaryProfile.name;
+      document.getElementById('secondaryScore').textContent = `${percentages[secondary]}% - Your Supporting Style`;
+
+      // Create radar chart
+      const ctx = document.getElementById('resultsChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: ['Command', 'Cohesion', 'Stability', 'Precision'],
+          datasets: [{
+            label: 'Your Profile',
+            data: [percentages.D, percentages.I, percentages.S, percentages.C],
+            backgroundColor: 'rgba(243, 156, 18, 0.2)',
+            borderColor: '#f39c12',
+            borderWidth: 3,
+            pointBackgroundColor: '#f39c12',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          scales: {
+            r: {
+              min: 0,
+              max: 100,
+              ticks: {
+                stepSize: 25,
+                color: '#94a3b8',
+                font: { size: 12 }
+              },
+              grid: {
+                color: 'rgba(255, 255, 255, 0.1)'
+              },
+              angleLines: {
+                color: 'rgba(255, 255, 255, 0.1)'
+              },
+              pointLabels: {
+                color: '#e8edf2',
+                font: {
+                  size: 14,
+                  family: "'Barlow Condensed', sans-serif",
+                  weight: '600'
+                }
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              display: false
+            }
+          }
+        }
+      });
+
+      // Save result to backend
+      try {
+        await fetch(`${WORKER_URL}/save-result`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...userData,
+            timestamp: new Date().toISOString()
+          })
+        });
+      } catch (error) {
+        console.error('Failed to save result:', error);
+      }
+    }
+
+    // Email Report Button
+    document.getElementById('emailReportBtn').addEventListener('click', async () => {
+      const btn = document.getElementById('emailReportBtn');
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+
+      try {
+        const response = await fetch(`${WORKER_URL}/send-report`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(userData)
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          document.getElementById('emailSuccess').classList.remove('hidden');
+          btn.textContent = '✓ Report Sent';
+        } else {
+          alert('Failed to send report. Please try again.');
+          btn.disabled = false;
+          btn.textContent = '📧 Email Me Detailed Report';
+        }
+      } catch (error) {
+        alert('Unable to send report. Please try again.');
+        btn.disabled = false;
+        btn.textContent = '📧 Email Me Detailed Report';
+      }
+    });
+
+    // Print Button
+    document.getElementById('printBtn').addEventListener('click', () => {
+      window.print();
+    });
+
+    // Allow Enter key on access code
+    document.getElementById('accessCode').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        document.getElementById('validateCodeBtn').click();
+      }
+    });
+
+    // Allow Enter key on OTP
+    document.getElementById('otpCode').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        document.getElementById('verifyOtpBtn').click();
+      }
+    });
+  </script>
+</body>
+</html>
